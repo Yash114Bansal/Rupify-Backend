@@ -15,3 +15,8 @@ class RupifyUser(AbstractUser):
 
     def __str__(self):
         return self.first_name
+
+class CashValueModel(models.Model):
+    note_number = models.CharField(max_length=200)
+    note_amount = models.IntegerField()
+    

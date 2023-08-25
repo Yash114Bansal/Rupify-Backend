@@ -1,8 +1,7 @@
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from .forms import RupifyUserCreationForm, RupifyUserChangeForm
-from .models import RupifyUser
-
+from .models import RupifyUser,CashValueModel
 
 class RupifyUserAdmin(UserAdmin):
     add_form = RupifyUserCreationForm
@@ -26,3 +25,7 @@ class RupifyUserAdmin(UserAdmin):
 
 
 admin.site.register(RupifyUser, RupifyUserAdmin)
+
+@admin.register(CashValueModel)
+class CashValueAdmin(admin.ModelAdmin):
+    list_display = ["note_number","note_amount"]
