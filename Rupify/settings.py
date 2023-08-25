@@ -130,6 +130,7 @@ AUTH_USER_MODEL = 'CashAPI.RupifyUser'
 
 
 SIMPLE_JWT = {
+    'USER_ID_FIELD': 'aadhar_number',
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
