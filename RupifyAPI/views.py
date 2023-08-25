@@ -55,6 +55,11 @@ class TransferNoteView(APIView):
 
         for notes in list_notes:
             try:
+                notes = notes.split("::")[0]
+            except:
+                pass
+
+            try:
                 sender_aadhar, note_number = decrypt_note(notes.encode()).split("::")
             except:
                 return Response({'error': 'Invalid Note'}, status=status.HTTP_400_BAD_REQUEST)
@@ -73,6 +78,11 @@ class TransferNoteView(APIView):
             return Response({"notes": pending_list},status=status.HTTP_406_NOT_ACCEPTABLE)
         
         for notes in list_notes:
+            try:
+                notes = notes.split("::")[0]
+            except:
+                pass
+            
             sender_aadhar, note_number = decrypt_note(notes.encode()).split("::")
             note_number = sub(r'[^\x20-\x7E]+', '',note_number.encode().decode("utf-8", "ignore"))
             user = RupifyUser.objects.filter(aadhar_number=sender_aadhar).first()

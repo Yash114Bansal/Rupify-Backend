@@ -81,9 +81,12 @@ class NoteValueView(APIView):
 
     def get(self, request):
         note = request.data.get('note')
-
         if not note:
             return Response({'error': 'Missing note'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            note = note.split("::")[0]
+        except:
+            pass
         try:
             note = decrypt_note(note.encode())
             note = note.split("::")[-1].strip()
