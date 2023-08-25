@@ -6,6 +6,7 @@ from .models import CashValueModel,RupifyUser,OTP
 from .serializers import PostNoteAmountSerializer,VerifyOTPSerializer
 from random import randint
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.tokens import AccessToken
 from time import timezone
 from django.utils import timezone
 from .utils import SendOTP
@@ -52,7 +53,13 @@ class VerifyOTP(APIView):
             if otp_object.has_expired():
                 return Response({'error': 'OTP has expired'}, status=status.HTTP_400_BAD_REQUEST)
             
-            return Response({'message': 'OTP verified successfully'}, status=status.HTTP_200_OK)
+            access_token = AccessToken.for_user(user)
+            
+            return Response({
+                'access_token': str(access_token),
+                'message': 'OTP verified successfully'
+            }, status=status.HTTP_200_OK)
+            # return Response({'message': 'OTP verified successfully'}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
