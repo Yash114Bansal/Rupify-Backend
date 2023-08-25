@@ -26,7 +26,7 @@ class SendOTPView(APIView):
         if not user:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        old_otp = OTP.objects.get(user=user)
+        old_otp = OTP.objects.filter(user=user)
         if old_otp:
             old_otp.delete()
 
