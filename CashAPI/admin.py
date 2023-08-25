@@ -1,7 +1,7 @@
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from .forms import RupifyUserCreationForm, RupifyUserChangeForm
-from .models import RupifyUser,CashValueModel
+from .models import RupifyUser,CashValueModel,OTP
 
 class RupifyUserAdmin(UserAdmin):
     add_form = RupifyUserCreationForm
@@ -29,3 +29,7 @@ admin.site.register(RupifyUser, RupifyUserAdmin)
 @admin.register(CashValueModel)
 class CashValueAdmin(admin.ModelAdmin):
     list_display = ["note_number","note_amount"]
+
+@admin.register(OTP)
+class OTPAdmin(admin.ModelAdmin):
+    list_display = ["user","otp","expiry_time"]
