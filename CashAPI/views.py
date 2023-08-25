@@ -7,6 +7,8 @@ from .serializers import PostNoteAmountSerializer,VerifyOTPSerializer
 from random import randint
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt import authentication
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from time import timezone
 from django.utils import timezone
 from .utils import SendOTP
@@ -66,6 +68,8 @@ class VerifyOTP(APIView):
 
 
 class NoteValue(APIView):
+    authentication_classes = [authentication.JWTAuthentication]
+    permission_classes = [IsAdminUser]
     def post(self,request,format = None):
         serializer = PostNoteAmountSerializer(data=request.data)
         if serializer.is_valid():
