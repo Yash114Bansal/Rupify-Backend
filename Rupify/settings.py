@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'CashAPI',
-    "RupifyAPI"
+    "RupifyAPI",
+    "user_finance"
 ]
 
 MIDDLEWARE = [
