@@ -10,7 +10,7 @@ key_hex = '12345678901234567890123456789ABC'
 key = bytes.fromhex(key_hex)
 
 def SendOTP(otp,mobile_number):
-    requests.get(f"https://2factor.in/API/V1/{otp_api_key}/SMS/{mobile_number}/{otp}/RupifyOTP")
+    requests.get(f"https://2factor.in/API/V1/{otp_api_key}/SMS/{mobile_number}/{otp}/")
 
 def encrypt_note(note_number,aadhar,purpose):
     note = f"{aadhar}::{note_number}".encode()

@@ -1,13 +1,15 @@
 from django.contrib import admin
-from .models import PurposeModel,UserNotesModel
+from .models import PurposeModel,UserNotesModel,HistoryModel
 
 @admin.register(PurposeModel)
 class PurposeAdmin(admin.ModelAdmin):
     list_display = ["user","purpose"]
 
 @admin.register(UserNotesModel)
-class UserNptes(admin.ModelAdmin):
+class UserNotes(admin.ModelAdmin):
     list_display = ["user","note"]
 
+@admin.register(HistoryModel)
+class UserNptes(admin.ModelAdmin):
+    list_display = ["user","second_user","amount","time"]
 
-# Register your models here.

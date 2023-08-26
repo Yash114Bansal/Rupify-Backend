@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from CashAPI.models import RupifyUser
-from .models import PurposeModel,UserNotesModel
+from .models import PurposeModel,UserNotesModel,HistoryModel
 from json import loads
 class AadharNumberField(serializers.CharField):
     def to_representation(self, value):
@@ -27,7 +27,7 @@ class UserNotePostSerializer(serializers.Serializer):
                 user_note = UserNotesModel.objects.create(user=user, note=note_content)
                 saved_notes.append(user_note.note)
             except:
-                pass  # Handle any exceptions or duplicates here
+                pass
         
         return saved_notes
 
@@ -46,3 +46,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = RupifyUser
         fields = ["aadhar_number","phone","user_Picture", "first_name", "last_name","purposes","notes"]
+
+class HistorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = HistoryModel
+        fields = ['second_user', 'amount', 'time']
