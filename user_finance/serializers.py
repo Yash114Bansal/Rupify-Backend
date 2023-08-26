@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from CashAPI.models import RupifyUser
 from .models import PurposeModel,UserNotesModel
-
+from json import loads
 class AadharNumberField(serializers.CharField):
     def to_representation(self, value):
         if value:
@@ -13,10 +13,23 @@ class PurposeSerializer(serializers.ModelSerializer):
         model = PurposeModel
         fields = ["purpose"]
 
-class UserNoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserNotesModel
-        fields = ["note"]
+class UserNotePostSerializer(serializers.Serializer):
+    notes = serializers.ListField(child=serializers.CharField(max_length=200))
+
+    def create(self, validated_data):
+        notes_data = loads(validated_data.get('notes')[0])
+        user = self.context['request'].user
+        
+        saved_notes = []
+        
+        for note_content in notes_data:
+            try:
+                user_note = UserNotesModel.objects.create(user=user, note=note_content)
+                saved_notes.append(user_note.note)
+            except:
+                pass  # Handle any exceptions or duplicates here
+        
+        return saved_notes
 
 class UserSerializer(serializers.ModelSerializer):
     aadhar_number = AadharNumberField(max_length=12)
@@ -29,20 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_purposes(self, obj):
         purposes = PurposeModel.objects.filter(user=obj).values_list("purpose", flat=True)
         return list(purposes)
-    
-    def create(self, validated_data):
-        user = self.context["request"].user  # Get the user from request.user
-        notes_data = self.context["request"].data.get("notes", [])  # Get notes_data from request data
-        print(notes_data)
-        user_serializer = UserSerializer(user, data=validated_data)
-        user_serializer.is_valid(raise_exception=True)
-        user_serializer.save()
 
-        for note_number in notes_data:
-            UserNotesModel.objects.create(user=user, note_number=note_number)
-            print(note_number)
-
-        return user    
     class Meta:
         model = RupifyUser
         fields = ["aadhar_number","phone","user_Picture", "first_name", "last_name","purposes","notes"]
