@@ -103,3 +103,35 @@ class GetPendingNoteView(APIView):
             pending_list.append(notes.note_number)
         Pending_Notes.delete()
         return Response({"notes":pending_list},status=status.HTTP_200_OK)
+
+class PhoneTransferView(APIView):
+    authentication_classes = [authentication.JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        try:
+            list_notes = loads(request.data.get("notes"))
+        except:
+            return Response({"error":"Please Give list of Valid notes"}, status=status.HTTP_400_BAD_REQUEST)
+        receiver_phone = request.data.get("phone")
+        if not receiver_phone:
+            return Response({"error":"Please provide receiver phone number as phone"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = RupifyUser.objects.filter(phone = receiver_phone).first()
+        if not user:
+            return Response({'error': 'User With That Phone Number does not exists'}, status=status.HTTP_400_BAD_REQUEST)
+        for note in list_notes:
+            try:
+                notes = note.split("::")[0]
+            except:
+                pass
+            
+            try:
+                PendingNoteModel.objects.create(user=request.user,note_number=notes)
+                note_number = decrypt_note(notes.encode()).split("::")[1]
+                note_number = sub(r'[^\x20-\x7E]+', '',note_number.encode().decode("utf-8", "ignore"))
+            except:
+                return Response({'error': 'Invalid Note'}, status=status.HTTP_400_BAD_REQUEST)
+
+            DepositeUserModel.objects.create(user = user,note_number=note_number,note_purpose=0)
+            
+            return Response({"message": "Transfer successful"}, status=status.HTTP_200_OK)
