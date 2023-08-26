@@ -3,9 +3,9 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
 import base64
-
-otp_api_key = "5bf09b65-4327-11ee-addf-0200cd936042"
-key_hex = '12345678901234567890123456789ABC'
+import os
+key_hex = os.environ.get('KEY_HEX')
+otp_api_key = os.environ.get('OTPAPI')
 key = bytes.fromhex(key_hex)
 
 def SendOTP(otp,mobile_number):
