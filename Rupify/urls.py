@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("CashAPI/",include("CashAPI.urls")),
     path("RupifyAPI/",include("RupifyAPI.urls")),
+    path("User/",include("user_finance.urls")),
 ]
